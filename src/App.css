@@ -7,6 +7,29 @@
   pointer-events: none;
 }
 
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 10px 16px;
+  background: #2e2d2d;
+  color: #f1f1f1;
+  /* padding-top: 102px; */
+}
+.content { 
+  padding-top: 502px;
+}
+.todoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* width: 95%; */
+  padding: 0 2%;
+}
+.divider {
+  width: 100%;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
