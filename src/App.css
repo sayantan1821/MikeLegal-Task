@@ -50,6 +50,9 @@
 .row-part-1 {
   display: flex;
 }
+.heading h4 {
+  margin: 0;
+}
 .divider {
   width: 100%;
 }
