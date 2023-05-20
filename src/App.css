@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  /* overflow: hidden; */
 }
 
 .App-logo {
@@ -15,9 +16,14 @@
   background: #2e2d2d;
   color: #f1f1f1;
   /* padding-top: 102px; */
+  z-index: 10;
 }
 .content { 
   padding-top: 502px;
+}
+.contentBox {
+  height: 88vh;
+  overflow-y: scroll;
 }
 .todoRow {
   display: flex;
@@ -25,9 +31,37 @@
   align-items: center;
   /* width: 95%; */
   padding: 0 2%;
+  /* display:inline-block; */
+    color:#444;
+    /* border:0.5px solid #CCC; */
+    
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+    cursor:pointer;
+    vertical-align:middle;
+    /* max-width: 100px; */
+    /* padding: 5px; */
+    text-align: center;
+}
+.todoRow:active {
+  background:#DDD;
+  color:rgb(107, 107, 107);
+  box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
+}
+.row-part-1 {
+  display: flex;
 }
 .divider {
   width: 100%;
+}
+.ListItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  margin-left: 2rem;
+}
+.strikeThrough {
+  text-decoration: line-through;
 }
 
 @media (prefers-reduced-motion: no-preference) {

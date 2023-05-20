@@ -9,6 +9,7 @@ function App(props) {
       setData(res.data);
     });
   }, []);
+  data.map((d, idx) => d["isDone"] = 'false')
   return <ToDo data={data} />;
 }
 
