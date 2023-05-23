@@ -43,13 +43,13 @@ const style = {
   borderRadius: "5px",
 };
 function ToDo({ data }) {
-  let filteredData = data;
   const [open, setOpen] = useState(false);
   const [searchOpen, setSeachOpen] = useState(false);
   const [filterValue, setFilterValue] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [state, setState] = useState(0);
+  const [mainContent, setMainContent] = useState([...data])
+  const [displayContent, setDisplayContent] = useState([...mainContent]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -58,34 +58,35 @@ function ToDo({ data }) {
 
   const handleFilterChange = (event) => {
     setFilterValue(event.target.value);
+    let filteredData = mainContent.filter((item) => {
+      if (event.target.value === "") {
+        return true; // Show all items when no filter is selected
+      }
+      return item.isDone === event.target.value 
+    });
+    setDisplayContent([...filteredData]);
   };
 
   const handleSearch = (event) => {
     event.preventDefault();
     const query = event.target.search.value;
     setSearchQuery(query);
+    let filteredData = mainContent.filter((item) => {
+      if (event.target.value === "") {
+        return true; // Show all items when no filter is selected
+      }
+      return item.title.includes(event.target.search.value) || item.body.includes(event.target.search.value) 
+    });
+    setDisplayContent([...filteredData]);
     handleSearchClose();
   };
-
-  filteredData = data.filter((item) => {
-    if (filterValue === "" && searchQuery === "") {
-      return true; // Show all items when no filter is selected
-    } else if (filterValue === "")
-      return (
-        item.title.includes(searchQuery) || item.body.includes(searchQuery)
-      );
-    else if (searchQuery === "") return item.isDone == filterValue;
-    return (
-      item.isDone == filterValue &&
-      (item.title.includes(searchQuery) || item.body.includes(searchQuery))
-    );
-  });
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleReset = () => {
+    setDisplayContent([...mainContent])
     setFilterValue("");
     setSearchQuery("");
     setIsDropdownOpen(false);
@@ -102,14 +103,12 @@ function ToDo({ data }) {
       .then((res) => {
         let newToDo = res.data;
         newToDo.isDone = false;
-        data.unshift(newToDo);
-        setState(state + 1);
+        setMainContent([newToDo, ...mainContent])
+        setDisplayContent([newToDo, ...mainContent])
       });
 
-    console.log(data);
     handleClose();
   };
-
   const handleDelete = (id, arIdx) => {
     axios
       .delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
@@ -119,16 +118,18 @@ function ToDo({ data }) {
       .catch((error) => {
         console.error("There was an error!", error);
       });
-    delete data[arIdx];
-    setState(state + 1);
+    let newData = mainContent.filter((el, idx) => idx !== arIdx)
+    setMainContent([...newData]);
+    setDisplayContent([...newData]);
   };
 
   const handleDone = (index) => {
-    data[index].isDone = data[index]["isDone"] === "true" ? "false" : "true";
-    setState(state + 1);
+    let newData = mainContent.slice();
+    newData[index].isDone = newData[index]["isDone"] === "true" ? "false" : "true";
+    setMainContent([...newData]);
   };
 
-  useEffect(() => {}, [state]);
+  useEffect(() => {}, [mainContent]);
 
   return (
     <div className="App">
@@ -144,7 +145,7 @@ function ToDo({ data }) {
             ToDos
           </Typography>
           <List sx={{ mb: 2, mt: 6 }} className="contentBox">
-            {filteredData.map(({ id, title, body, isDone }, arIdx) => (
+            {displayContent ? displayContent.map(({ id, title, body, isDone }, arIdx) => (
               <div key={arIdx}>
                 <div className="todoRow">
                   <div className="row-part-1">
@@ -171,7 +172,7 @@ function ToDo({ data }) {
                 </div>
                 <Divider className="divider" component="li" />
               </div>
-            ))}
+            )) : null}
           </List>
         </Paper>
         <AppBar

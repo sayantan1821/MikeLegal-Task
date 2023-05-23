@@ -10,7 +10,8 @@ function App(props) {
     });
   }, []);
   data.map((d, idx) => d["isDone"] = 'false')
-  return <ToDo data={data} />;
+  if(data.length > 0) { return <ToDo data={data} /> }
+  return <p>Loading...</p>
 }
 
 export default App;
